@@ -16,5 +16,8 @@
   },
   "stackblitz": {
     "startCommand": "npm run test"
+  },
+  "peerDependencies": {
+    "@vitejs/plugin-vue": "^2.2.4"
   }
 }

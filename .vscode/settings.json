@@ -19,6 +19,7 @@
     "**/.{idea,git,cache,output,temp}/**"
   ],
   "[typescript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  }
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "editor.formatOnSave": false
 }

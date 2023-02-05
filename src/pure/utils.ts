@@ -1,14 +1,12 @@
-import type {
-  SpawnOptionsWithStdioTuple,
-  StdioNull,
-  StdioPipe,
-} from 'child_process'
-import {
-  spawn,
-} from 'child_process'
-import * as path from 'path'
 import { chunksToLinesAsync } from '@rauschma/stringio'
+import {
+  spawn, SpawnOptionsWithStdioTuple,
+  spawnSync,
+  StdioNull,
+  StdioPipe
+} from 'child_process'
 import { existsSync } from 'fs-extra'
+import * as path from 'path'
 import { isWindows } from './platform'
 
 export function getVitestPath(projectRoot: string): string | undefined {
@@ -92,10 +90,16 @@ export async function getVitestVersion(
     })
   }
   else {
-    child = spawn(process.execPath, [vitestCommand.cmd, ...vitestCommand.args, '-v'], {
+    const cmd = vitestCommand.cmd
+    const cwd = cmd.split('/node_modules/')[0]
+    const env = { ...process.env, PATH: `${process.env.NVM_BIN}:${process.env.PATH}` }
+
+    const line = spawnSync(cmd, ['-v'], {
       stdio: ['ignore', 'pipe', 'pipe'],
-      env: { ...process.env, ...env },
-    })
+      cwd,
+      env,
+    }).stdout.toString()
+    return line.match(/vitest\/(\d+.\d+.\d+)/)![1]
   }
 
   // eslint-disable-next-line no-unreachable-loop
